@@ -1,0 +1,11 @@
+{
+  "n_components": 16,
+  "cumulative_variance_ratio": 0.9998841881752014,
+  "components_shape": [
+    16,
+    220
+  ],
+  "mean_shape": [
+    220
+  ]
+}
