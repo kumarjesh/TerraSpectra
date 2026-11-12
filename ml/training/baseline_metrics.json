@@ -1,0 +1,25 @@
+{
+  "model_type": "Balanced Random Forest (100 estimators, max_depth=12)",
+  "input_features": 16,
+  "spatial_evaluation": "Field-Block Holdout",
+  "f1_micro": 0.9983,
+  "f1_macro": 0.9671,
+  "f1_disease_class": 0.9023,
+  "confusion_matrix": [
+    [
+      11272,
+      0,
+      0
+    ],
+    [
+      0,
+      54396,
+      0
+    ],
+    [
+      0,
+      110,
+      508
+    ]
+  ]
+}
