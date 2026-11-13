@@ -1,0 +1,88 @@
+{
+  "type": "FeatureCollection",
+  "name": "Salinas Valley Farm 1000-Acre AOI",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "feature_id": "farm_boundary_salinas_01",
+        "name": "Rancho Salinas Agricultural Parcel 04",
+        "total_acreage": 1000.0,
+        "crop_type": "Lettuce / Brassica",
+        "status": "Monitored",
+        "crs": "EPSG:4326"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -121.66675000000001,
+              36.6868
+            ],
+            [
+              -121.64425000000001,
+              36.6868
+            ],
+            [
+              -121.64425000000001,
+              36.6686
+            ],
+            [
+              -121.66675000000001,
+              36.6686
+            ],
+            [
+              -121.66675000000001,
+              36.6868
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "feature_id": "infection_zone_05a",
+        "name": "Predicted Pre-Symptomatic Fungal Cluster",
+        "acreage_at_risk": 5.2,
+        "severity": "High (Pre-Symptomatic)",
+        "lead_time": "3 Weeks Before Visible Symptoms",
+        "recommended_action": "Hyper-targeted preventative bio-fungicide spray"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -121.65683339843751,
+              36.680903828125004
+            ],
+            [
+              -121.65513339843751,
+              36.680903828125004
+            ],
+            [
+              -121.65513339843751,
+              36.679543828125
+            ],
+            [
+              -121.65683339843751,
+              36.679543828125
+            ],
+            [
+              -121.65683339843751,
+              36.680903828125004
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
