@@ -18,6 +18,7 @@ from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 import numpy as np
 from PIL import Image
@@ -66,6 +67,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+@app.get("/", tags=["Dashboard"])
+def get_dashboard():
+    index_file = os.path.join(STATIC_DIR, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"message": "TerraSpectra API active. Visit /docs for swagger docs."}
 
 def startup_event():
     """Synchronous initialization helper for test suites."""

@@ -1,0 +1,51 @@
+{
+  "type": "FeatureCollection",
+  "name": "TerraSpectra Predicted Risk Management Zones",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "ZONE-B4",
+        "status": "CRITICAL_RISK",
+        "risk_score": 0.9995,
+        "affected_acres": 4.4,
+        "predicted_pathogen": "Fungal Leaf Blight (Pre-Symptomatic)",
+        "lead_time": "21 Days Before Visible Yellowing",
+        "prescription": "Apply 12 L/ha Bacillus subtilis bio-fungicide"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -121.65683339843751,
+              36.680903828125004
+            ],
+            [
+              -121.65513339843751,
+              36.680903828125004
+            ],
+            [
+              -121.65513339843751,
+              36.679543828125
+            ],
+            [
+              -121.65683339843751,
+              36.679543828125
+            ],
+            [
+              -121.65683339843751,
+              36.680903828125004
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

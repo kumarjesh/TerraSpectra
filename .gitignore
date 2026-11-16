@@ -51,10 +51,13 @@ Thumbs.db
 *.swo
 
 # Large geospatial & ML artifacts
+*.npy
 *.h5
 *.hdf5
 *.tif
 *.tiff
 *.cog
-!data/sample_*.geojson
+*.pkl
+!data/farm_aoi.geojson
+!data/predicted_risk_zones.geojson
 

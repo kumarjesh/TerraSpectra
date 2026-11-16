@@ -1,0 +1,21 @@
+{
+  "farm_id": "salinas_valley_01",
+  "total_monitored_acres": 1000.0,
+  "acreage_at_risk": 4.4,
+  "percent_canopy_affected": 0.44,
+  "mean_risk_score": 0.0158,
+  "peak_risk_probability": 0.9995,
+  "risk_classification": "High (Pre-Symptomatic Warning)",
+  "projected_lead_time": "3 Weeks Before Visible Symptoms",
+  "high_risk_zone_count": 1,
+  "target_zone": {
+    "name": "Zone B4 - Central Infection Cluster",
+    "acreage": 4.4,
+    "center_gps": [
+      36.680223828125,
+      -121.65598339843751
+    ],
+    "recommended_action": "Hyper-targeted preventative bio-fungicide application (Zone B4 only)",
+    "estimated_chemical_savings": "99.5% reduction vs full 1,000-acre blanket spray"
+  }
+}

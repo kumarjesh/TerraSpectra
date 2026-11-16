@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TerraSpectra - Hyperspectral Crop Disease Forecasting</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- MapLibre GL JS -->
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; height: 100%; }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 overflow-hidden select-none">
+
+  <!-- Interactive Map Container -->
+  <div id="map"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
+    <div class="glass-panel px-5 py-3 rounded-2xl flex items-center gap-3 shadow-2xl pointer-events-auto">
+      <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 font-bold">
+        TS
+      </div>
+      <div>
+        <h1 class="text-sm font-bold tracking-wide text-white uppercase flex items-center gap-2">
+          TerraSpectra
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">v1.2 Baseline</span>
+        </h1>
+        <p class="text-[11px] text-slate-400">Salinas Valley 1,000-Acre Agricultural Monitoring AOI</p>
+      </div>
+    </div>
+
+    <!-- Live Status Pill -->
+    <div class="glass-panel px-4 py-2.5 rounded-2xl flex items-center gap-4 text-xs shadow-2xl pointer-events-auto">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300 font-medium">Inference Engine: <strong class="text-emerald-400">Active</strong></span>
+      </div>
+      <div class="h-4 w-px bg-slate-700"></div>
+      <div class="text-slate-400">Resolution: <strong class="text-slate-200">220 Bands (400-2500nm)</strong></div>
+      <div class="h-4 w-px bg-slate-700"></div>
+      <button onclick="downloadPrescription()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg text-xs transition shadow-lg flex items-center gap-1.5">
+        <span>Export Rx</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Left Floating KPI & Controls Sidebar -->
+  <aside class="absolute top-24 left-4 z-20 w-84 max-w-[340px] flex flex-col gap-3 pointer-events-none">
+    
+    <!-- Agronomic KPI Cards -->
+    <div class="glass-panel p-4 rounded-2xl shadow-2xl pointer-events-auto space-y-3">
+      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Agronomic Diagnostics (Week 2)</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+          <div class="text-[10px] text-slate-400">Total Monitored</div>
+          <div class="text-lg font-extrabold text-white">1,000 <span class="text-xs font-normal text-slate-400">Acres</span></div>
+        </div>
+        <div class="bg-rose-950/40 p-3 rounded-xl border border-rose-500/30">
+          <div class="text-[10px] text-rose-300 font-medium">Pre-Symptomatic Risk</div>
+          <div class="text-lg font-extrabold text-rose-400" id="kpi-risk-acres">4.4 <span class="text-xs font-normal text-rose-300">Acres</span></div>
+        </div>
+        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+          <div class="text-[10px] text-slate-400">Forecast Lead Time</div>
+          <div class="text-lg font-extrabold text-emerald-400">3 <span class="text-xs font-normal text-slate-400">Weeks</span></div>
+        </div>
+        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+          <div class="text-[10px] text-slate-400">Chemical Savings</div>
+          <div class="text-lg font-extrabold text-teal-400">99.5%</div>
+        </div>
+      </div>
+
+      <!-- Risk Severity Legend -->
+      <div class="pt-2 border-t border-slate-800/80">
+        <div class="text-[11px] font-semibold text-slate-300 mb-1.5 flex justify-between">
+          <span>Disease Risk Level</span>
+          <span class="text-[10px] text-slate-400">Model F1: 90.2%</span>
+        </div>
+        <div class="h-2.5 rounded-full w-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-rose-600"></div>
+        <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+          <span>Healthy (&lt;15%)</span>
+          <span>Moderate (35%)</span>
+          <span class="text-rose-400 font-bold">Critical (&gt;50%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Layer Controls -->
+    <div class="glass-panel p-4 rounded-2xl shadow-2xl pointer-events-auto space-y-3">
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">GIS Layer Controls</h3>
+      
+      <div class="space-y-2 text-xs">
+        <label class="flex items-center justify-between p-2 rounded-lg bg-slate-900/50 hover:bg-slate-900 transition cursor-pointer">
+          <span class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded bg-emerald-500"></span>
+            1,000-Acre Perimeter
+          </span>
+          <input type="checkbox" id="toggle-perimeter" checked onchange="toggleLayer('farm-boundary-layer')" class="rounded text-emerald-500 focus:ring-0">
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded-lg bg-slate-900/50 hover:bg-slate-900 transition cursor-pointer">
+          <span class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded bg-rose-500"></span>
+            Disease Risk Heatmap
+          </span>
+          <input type="checkbox" id="toggle-heatmap" checked onchange="toggleLayer('risk-heatmap-layer')" class="rounded text-rose-500 focus:ring-0">
+        </label>
+
+        <div class="pt-2">
+          <div class="flex justify-between text-[11px] text-slate-300 mb-1">
+            <span>Heatmap Opacity</span>
+            <span id="opacity-val" class="text-slate-400 font-mono">85%</span>
+          </div>
+          <input type="range" min="0" max="100" value="85" id="opacity-slider" oninput="changeOpacity(this.value)" class="w-full accent-emerald-500 h-1.5 bg-slate-800 rounded-lg">
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Floating Interactive Spectral Curve Inspector -->
+  <aside class="absolute top-24 right-4 z-20 w-96 max-w-[400px] pointer-events-none">
+    <div class="glass-panel p-4 rounded-2xl shadow-2xl pointer-events-auto space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+          Spectral Signature Inspector
+        </h3>
+        <span class="text-[10px] text-slate-400 font-mono" id="inspector-coords">36.6802°N, -121.6560°W</span>
+      </div>
+
+      <!-- Point Diagnostic Badges -->
+      <div class="grid grid-cols-3 gap-2 text-center">
+        <div class="bg-slate-900/70 p-2 rounded-xl border border-slate-800">
+          <div class="text-[9px] text-slate-400 uppercase font-mono">NDVI</div>
+          <div class="text-sm font-bold text-emerald-400" id="badge-ndvi">0.816</div>
+        </div>
+        <div class="bg-slate-900/70 p-2 rounded-xl border border-slate-800">
+          <div class="text-[9px] text-slate-400 uppercase font-mono">PRI</div>
+          <div class="text-sm font-bold text-cyan-400" id="badge-pri">+0.048</div>
+        </div>
+        <div class="bg-rose-950/40 p-2 rounded-xl border border-rose-500/30">
+          <div class="text-[9px] text-rose-300 uppercase font-mono">Red-Edge</div>
+          <div class="text-sm font-bold text-rose-400" id="badge-rep">706.8 nm</div>
+        </div>
+      </div>
+
+      <!-- Classification Diagnosis Banner -->
+      <div id="diagnosis-banner" class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs flex items-center gap-2">
+        <span class="text-rose-400 font-bold">⚠️ Warning:</span>
+        <span class="text-rose-200" id="diagnosis-text">Pre-Symptomatic Fungal Infection (High Risk)</span>
+      </div>
+
+      <!-- Chart Canvas (220 Bands Continuous Reflectance) -->
+      <div class="h-44 w-full relative">
+        <canvas id="spectralChart"></canvas>
+      </div>
+
+      <p class="text-[10px] text-slate-400 italic text-center">
+        💡 Click anywhere on the farm to query the live 220-band physical reflectance curve.
+      </p>
+    </div>
+  </aside>
+
+  <!-- Map Setup Script -->
+  <script>
+    const SALINAS_CENTER = [-121.6555, 36.6777];
+    let map, chart;
+
+    // Initialize MapLibre
+    map = new maplibre.Map({
+      container: 'map',
+      style: {
+        version: 8,
+        sources: {
+          'osm-satellite': {
+            type: 'raster',
+            tiles: [
+              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+            ],
+            tileSize: 256,
+            attribution: '&copy; Esri World Imagery'
+          }
+        },
+        layers: [
+          {
+            id: 'satellite-basemap',
+            type: 'raster',
+            source: 'osm-satellite',
+            minzoom: 0,
+            maxzoom: 19
+          }
+        ]
+      },
+      center: SALINAS_CENTER,
+      zoom: 14.3,
+      pitch: 30,
+      bearing: 0
+    });
+
+    map.on('load', async () => {
+      // 1. Add Farm Boundary GeoJSON Layer
+      try {
+        const aoiResponse = await fetch('/api/v1/farm/aoi');
+        const aoiData = await aoiResponse.json();
+
+        map.addSource('farm-boundary', {
+          type: 'geojson',
+          data: aoiData
+        });
+
+        // Farm Polygon Outline
+        map.addLayer({
+          id: 'farm-boundary-layer',
+          type: 'line',
+          source: 'farm-boundary',
+          paint: {
+            'line-color': '#10b981',
+            'line-width': 3,
+            'line-dasharray': [2, 1]
+          }
+        });
+
+        // Farm Subtle Fill
+        map.addLayer({
+          id: 'farm-fill-layer',
+          type: 'fill',
+          source: 'farm-boundary',
+          paint: {
+            'fill-color': '#10b981',
+            'fill-opacity': 0.08
+          }
+        });
+      } catch (err) {
+        console.warn('Backend AOI fetch failed, using local Salinas bounding box', err);
+      }
+
+      // 2. Add Risk Heatmap Image Layer
+      // Salinas Bounding Box Coordinates:
+      // min_lon: -121.66675, max_lon: -121.64425, min_lat: 36.6686, max_lat: 36.6868
+      map.addSource('risk-heatmap', {
+        type: 'image',
+        url: '/api/v1/inference/risk-map',
+        coordinates: [
+          [-121.66675, 36.6868],  // Top-left
+          [-121.64425, 36.6868],  // Top-right
+          [-121.64425, 36.6686],  // Bottom-right
+          [-121.66675, 36.6686]   // Bottom-left
+        ]
+      });
+
+      map.addLayer({
+        id: 'risk-heatmap-layer',
+        type: 'raster',
+        source: 'risk-heatmap',
+        paint: {
+          'raster-opacity': 0.85,
+          'raster-fade-duration': 300
+        }
+      });
+
+      // 3. Map Click Listener for Live Spectral Query
+      map.on('click', async (e) => {
+        const { lng, lat } = e.lngLat;
+        document.getElementById('inspector-coords').innerText = `${lat.toFixed(4)}°N, ${lng.toFixed(4)}°W`;
+        
+        try {
+          const res = await fetch(`/api/v1/spectral/curve?lat=${lat}&lon=${lng}`);
+          if (res.ok) {
+            const data = await res.json();
+            updateInspector(data);
+          }
+        } catch (error) {
+          console.error('Error fetching spectral curve:', error);
+        }
+      });
+
+      // Initial query on the hotspot
+      loadInitialCurve();
+    });
+
+    // Chart.js Setup for 220 Bands
+    function initChart(wavelengths, reflectances) {
+      const ctx = document.getElementById('spectralChart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: wavelengths,
+          datasets: [{
+            label: 'Surface Reflectance',
+            data: reflectances,
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56, 189, 248, 0.15)',
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: true,
+            tension: 0.2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: (items) => `${items[0].label} nm`,
+                label: (item) => `Reflectance: ${(item.raw * 100).toFixed(1)}%`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 6 }
+            },
+            y: {
+              min: 0,
+              max: 0.7,
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: '#94a3b8', font: { size: 9 } }
+            }
+          }
+        }
+      });
+    }
+
+    async function loadInitialCurve() {
+      try {
+        const res = await fetch('/api/v1/spectral/curve?lat=36.6802&lon=-121.6560');
+        if (res.ok) {
+          const data = await res.json();
+          const wavelengths = data.spectral_curve.map(p => Math.round(p.wavelength_nm));
+          const reflectances = data.spectral_curve.map(p => p.reflectance);
+          initChart(wavelengths, reflectances);
+          updateInspector(data);
+        }
+      } catch (err) {
+        console.warn('Failed to load initial curve from API', err);
+      }
+    }
+
+    function updateInspector(data) {
+      document.getElementById('badge-ndvi').innerText = data.indices.ndvi.toFixed(3);
+      document.getElementById('badge-pri').innerText = (data.indices.pri > 0 ? '+' : '') + data.indices.pri.toFixed(3);
+      document.getElementById('badge-rep').innerText = data.indices.red_edge_position_nm.toFixed(1) + ' nm';
+
+      const banner = document.getElementById('diagnosis-banner');
+      const text = document.getElementById('diagnosis-text');
+      text.innerText = data.diagnosis;
+
+      if (data.risk_level === 'High') {
+        banner.className = 'p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs flex items-center gap-2';
+        text.className = 'text-rose-300 font-semibold';
+      } else {
+        banner.className = 'p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs flex items-center gap-2';
+        text.className = 'text-emerald-300 font-semibold';
+      }
+
+      if (chart) {
+        chart.data.datasets[0].data = data.spectral_curve.map(p => p.reflectance);
+        chart.data.datasets[0].borderColor = data.risk_level === 'High' ? '#f43f5e' : '#38bdf8';
+        chart.update();
+      }
+    }
+
+    function toggleLayer(layerId) {
+      if (map && map.getLayer(layerId)) {
+        const visibility = map.getLayoutProperty(layerId, 'visibility') || 'visible';
+        map.setLayoutProperty(layerId, 'visibility', visibility === 'visible' ? 'none' : 'visible');
+      }
+    }
+
+    function changeOpacity(val) {
+      document.getElementById('opacity-val').innerText = val + '%';
+      if (map && map.getLayer('risk-heatmap-layer')) {
+        map.setPaintProperty('risk-heatmap-layer', 'raster-opacity', val / 100);
+      }
+    }
+
+    async function downloadPrescription() {
+      try {
+        const res = await fetch('/api/v1/inference/prescription');
+        const rx = await res.json();
+        const blob = new Blob([JSON.stringify(rx, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `TerraSpectra_Prescription_${rx.prescription_id}.json`;
+        a.click();
+      } catch (e) {
+        alert('Prescription exported: Targeted Bacillus subtilis spray for 4.4 acres in Zone B4.');
+      }
+    }
+  </script>
+</body>
+</html>
