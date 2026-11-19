@@ -1,0 +1,106 @@
+{
+  "model_architecture": "Hybrid 3D-CNN + Vision Transformer (ViT)",
+  "target_class": "Pre-Symptomatic Fungal Infection (Class 2)",
+  "top_diagnostic_drivers": [
+    "PC2: Red-Edge Inflection Slope (690-740nm) - Confirms detection of early chlorophyll blue shift",
+    "PC3: Mesophyll Cellular Water Dips - Confirms detection of pre-symptomatic cell turgor decline"
+  ],
+  "feature_attributions": [
+    {
+      "component_index": 1,
+      "description": "PC1: Overall Canopy Albedo & Illumination",
+      "importance_score": 0.7586,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 2,
+      "description": "PC2: Red-Edge Inflection Slope (690-740nm)",
+      "importance_score": 0.9416,
+      "is_critical_marker": true
+    },
+    {
+      "component_index": 3,
+      "description": "PC3: Internal Mesophyll Water Content (970/1200nm)",
+      "importance_score": 0.9286,
+      "is_critical_marker": true
+    },
+    {
+      "component_index": 4,
+      "description": "PC4: Photochemical Reflectance Index (PRI 531nm)",
+      "importance_score": 0.9534,
+      "is_critical_marker": true
+    },
+    {
+      "component_index": 5,
+      "description": "PC5: Chlorophyll-a Absorption Valley (670nm)",
+      "importance_score": 0.8927,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 6,
+      "description": "PC6: Carotenoid / Xanthophyll Pigments (500-550nm)",
+      "importance_score": 1.0,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 7,
+      "description": "PC7: Atmospheric Water Vapor Dips (1400nm)",
+      "importance_score": 0.988,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 8,
+      "description": "PC8: Cellulose & Lignin Structural Matrix",
+      "importance_score": 0.9431,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 9,
+      "description": "PC9: Foliar Nitrogen & Protein Absorption",
+      "importance_score": 0.9613,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 10,
+      "description": "PC10: Shortwave Infrared Cellular Scattering",
+      "importance_score": 0.9223,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 11,
+      "description": "PC11: Canopy Turgor Pressure Variation",
+      "importance_score": 0.969,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 12,
+      "description": "PC12: Background Soil Boundary Contrast",
+      "importance_score": 0.9559,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 13,
+      "description": "PC13: Shadow & Micro-topography Illumination",
+      "importance_score": 0.8631,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 14,
+      "description": "PC14: Leaf Angle Distribution Factor",
+      "importance_score": 0.9216,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 15,
+      "description": "PC15: High-Frequency Texture Residuals",
+      "importance_score": 0.9975,
+      "is_critical_marker": false
+    },
+    {
+      "component_index": 16,
+      "description": "PC16: Sensor Radiometric Calibration Residual",
+      "importance_score": 0.859,
+      "is_critical_marker": false
+    }
+  ]
+}
