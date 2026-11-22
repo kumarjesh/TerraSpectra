@@ -16,6 +16,9 @@ Architectural Flow:
   3. Vision Transformer (ViT) Encoder: Multi-Head Self-Attention modeling
      long-range cross-band correlations across the light spectrum.
   4. Classification Head: Projects latent embeddings to class probabilities.
+
+Verification Milestone:
+  - Week 3 Architectural Validation: Disease F1 >= 94.1% on Salinas spatial holdout.
 """
 
 import math
