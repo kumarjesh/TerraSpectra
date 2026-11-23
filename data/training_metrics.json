@@ -1,0 +1,171 @@
+{
+  "architecture": "Hybrid 3D-CNN + Vision Transformer (ViT)",
+  "epochs": 12,
+  "batch_size": 16,
+  "device": "cpu",
+  "total_time_seconds": 81.83,
+  "peak_ram_mb": 252.32,
+  "best_disease_f1": 100.0,
+  "final_test_accuracy": 99.67,
+  "final_macro_f1": 99.67,
+  "classification_report": {
+    "Soil/Tracks": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 200.0
+    },
+    "Healthy Canopy": {
+      "precision": 0.9900990099009901,
+      "recall": 1.0,
+      "f1-score": 0.9950248756218906,
+      "support": 200.0
+    },
+    "Pre-Symptomatic Risk": {
+      "precision": 1.0,
+      "recall": 0.99,
+      "f1-score": 0.9949748743718593,
+      "support": 200.0
+    },
+    "accuracy": 0.9966666666666667,
+    "macro avg": {
+      "precision": 0.9966996699669967,
+      "recall": 0.9966666666666667,
+      "f1-score": 0.9966665833312499,
+      "support": 600.0
+    },
+    "weighted avg": {
+      "precision": 0.9966996699669968,
+      "recall": 0.9966666666666667,
+      "f1-score": 0.99666658333125,
+      "support": 600.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      200,
+      0,
+      0
+    ],
+    [
+      0,
+      200,
+      0
+    ],
+    [
+      0,
+      2,
+      198
+    ]
+  ],
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.5608,
+      "train_acc": 73.83,
+      "test_loss": 0.3846,
+      "test_acc": 83.67,
+      "macro_f1": 83.56,
+      "disease_f1": 77.97
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.1612,
+      "train_acc": 95.33,
+      "test_loss": 0.1411,
+      "test_acc": 95.33,
+      "macro_f1": 95.32,
+      "disease_f1": 93.33
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.0167,
+      "train_acc": 99.83,
+      "test_loss": 0.0419,
+      "test_acc": 98.5,
+      "macro_f1": 98.5,
+      "disease_f1": 97.7
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.0127,
+      "train_acc": 99.83,
+      "test_loss": 0.0057,
+      "test_acc": 99.83,
+      "macro_f1": 99.83,
+      "disease_f1": 99.75
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.0393,
+      "train_acc": 99.0,
+      "test_loss": 0.2643,
+      "test_acc": 94.5,
+      "macro_f1": 94.47,
+      "disease_f1": 91.89
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.0303,
+      "train_acc": 99.42,
+      "test_loss": 0.0336,
+      "test_acc": 98.83,
+      "macro_f1": 98.83,
+      "disease_f1": 98.22
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.0053,
+      "train_acc": 99.92,
+      "test_loss": 0.1832,
+      "test_acc": 95.83,
+      "macro_f1": 95.82,
+      "disease_f1": 93.33
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.0078,
+      "train_acc": 99.92,
+      "test_loss": 0.0042,
+      "test_acc": 99.83,
+      "macro_f1": 99.83,
+      "disease_f1": 99.75
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.0047,
+      "train_acc": 99.92,
+      "test_loss": 0.0017,
+      "test_acc": 100.0,
+      "macro_f1": 100.0,
+      "disease_f1": 100.0
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.0049,
+      "train_acc": 99.92,
+      "test_loss": 0.0112,
+      "test_acc": 99.67,
+      "macro_f1": 99.67,
+      "disease_f1": 99.5
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.002,
+      "train_acc": 100.0,
+      "test_loss": 0.0152,
+      "test_acc": 99.67,
+      "macro_f1": 99.67,
+      "disease_f1": 99.5
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.002,
+      "train_acc": 100.0,
+      "test_loss": 0.0163,
+      "test_acc": 99.67,
+      "macro_f1": 99.67,
+      "disease_f1": 99.5
+    }
+  ]
+}
